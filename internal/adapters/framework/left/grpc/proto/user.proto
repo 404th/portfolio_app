@@ -1,0 +1,28 @@
+syntax="proto3";
+
+package user_service;
+
+option go_package = "./pb/user_service";
+
+message CreateUser {
+    string username = 1;
+    string email = 2;
+    int32 password = 3;
+}
+
+message SignInUser {
+    string username = 1;
+    int32 password = 3;
+}
+
+message UUIDTracker {
+    string id = 1;
+}
+
+message AnswerForDelete {
+    bool is_deleted = 1;
+    string err = 2;
+}
+
+message Empty {
+}

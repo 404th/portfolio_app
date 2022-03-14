@@ -1,0 +1,13 @@
+syntax="proto3";
+
+package user_service;
+
+option go_package = "./pb/user_service";
+
+import "user.proto";
+
+service UserService {
+    rpc SignUp (CreateUser) returns (CreateUser) {}
+    rpc SignIn (SignInUser) returns (CreateUser) {}
+    rpc DeleteUser (UUIDTracker) returns (AnswerForDelete) {}
+}
