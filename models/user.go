@@ -8,3 +8,8 @@ type User struct {
 	Email    string    `json:"email"`
 	Password int32     `json:"password"`
 }
+
+type SignedIn struct {
+	UUID    uuid.UUID `json:"uuid"`
+	Deleted bool      `json:"deleted"`
+}

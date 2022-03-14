@@ -1,6 +1,7 @@
 package user
 
 import (
+	"errors"
 	"log"
 
 	"github.com/404th/portfolio_app/models"
@@ -16,15 +17,15 @@ func NewAdapter(db *sqlx.DB) *Adapter {
 	return &Adapter{db}
 }
 
-func (ua Adapter) SignUp(email, username string, password int32) (*models.User, error) {
-	var new_user *models.User
+func (ua Adapter) SignUp(email, username string, password int32) (uuid.UUID, error) {
+	var new_user_id uuid.UUID
 	//
 	new_id, err := uuidGen()
 	if err != nil {
-		return new_user, err
+		return new_user_id, err
 	}
 
-	var user *models.User = &models.User{
+	user := &models.User{
 		UUID:     new_id,
 		Username: username,
 		Email:    email,
@@ -44,26 +45,33 @@ func (ua Adapter) SignUp(email, username string, password int32) (*models.User, 
 	`
 	_, err = ua.db.Exec(ins_str, user.UUID, user.Username, user.Email, user.Password, false)
 	if err != nil {
-		return new_user, err
+		return new_user_id, err
 	}
-	new_user = user
-	return new_user, nil
+	new_user_id = user.UUID
+	return new_user_id, nil
 }
 
-func (ua Adapter) SignIn(username string, password int32) (*models.User, error) {
-	var new_user *models.User
+func (ua Adapter) SignIn(username string, password int32) (uuid.UUID, error) {
+	var (
+		signed_in_user    *models.SignedIn
+		signed_in_user_id uuid.UUID
+	)
 
-	find_str := `SELECT email, uuid, deleted FROM registered_users WHERE username=$1 AND password=$2`
+	find_str := `SELECT uuid, deleted FROM registered_users WHERE username=$1 AND password=$2`
 	row := ua.db.QueryRow(find_str)
 
 	if err := row.Scan(
-		&new_user.Email,
-		&new_user.UUID,
+		&signed_in_user.UUID,
+		&signed_in_user.Deleted,
 	); err != nil {
-		return new_user, err
+		return signed_in_user_id, err
 	}
 
-	return new_user, nil
+	if signed_in_user.Deleted {
+		return signed_in_user_id, errors.New("this user has been removed")
+	}
+
+	return signed_in_user_id, nil
 }
 
 func (ua Adapter) DeleteUser(id uuid.UUID) (bool, error) {
