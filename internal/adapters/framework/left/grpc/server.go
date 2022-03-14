@@ -3,25 +3,28 @@ package grpc
 import (
 	"net"
 
-	"github.com/404th/portfolio_app/internal/adapters/framework/right/db"
+	"github.com/404th/portfolio_app/internal/adapters/framework/left/grpc/pb/user_service"
+	"github.com/404th/portfolio_app/internal/ports"
 	"google.golang.org/grpc"
 )
 
-type Server struct {
-	db *db.DB
+type Adapter struct {
+	api ports.APIPorts
 }
 
-func NewServer(db *db.DB) *Server {
-	return &Server{db}
+func NewAdapter(api ports.APIPorts) *Adapter {
+	return &Adapter{api}
 }
 
-func (s *Server) Run(port string) error {
+func (s *Adapter) Run(port string) error {
 	lis, err := net.Listen("tcp", port)
 	if err != nil {
 		return err
 	}
 
 	grpcServer := grpc.NewServer()
+
+	user_service.RegisterUserServiceServer(grpcServer, s)
 
 	if err = grpcServer.Serve(lis); err != nil {
 		return err
