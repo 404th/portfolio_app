@@ -1,6 +1,7 @@
 package grpc
 
 import (
+	"fmt"
 	"net"
 
 	"github.com/404th/portfolio_app/internal/adapters/framework/left/grpc/pb/user_service"
@@ -30,5 +31,6 @@ func (s *Adapter) Run(port string) error {
 		return err
 	}
 
+	fmt.Printf("Server is working over port%v", port)
 	return nil
 }

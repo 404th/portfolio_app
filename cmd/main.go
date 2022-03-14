@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-
+	server_port := ":6464"
 	cfg := &config.DBCfg{
 		PgDriverName: "postgres",
 		PgHost:       "localhost",
@@ -31,5 +31,10 @@ func main() {
 
 	// adapter
 	user_adapter := api.NewAdapter(pg_db)
-	grpc.NewAdapter(user_adapter)
+	new_serv := grpc.NewAdapter(user_adapter)
+
+	if err = new_serv.Run(server_port); err != nil {
+		log.Fatalf("Failed to run server over port%v and occured this error:%v", server_port, err)
+		return
+	}
 }
