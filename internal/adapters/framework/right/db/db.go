@@ -12,7 +12,7 @@ type DB struct {
 	db *sqlx.DB
 }
 
-func NewDB(cfg *config.DBCfg) (*DB, error) {
+func NewDB(cfg *config.DBCfg) (*sqlx.DB, error) {
 	// making connection string for PostgreSQL
 	conStr := fmt.Sprintf("host=%s port=%v user=%s password=%s dbname=%s sslmode=%s",
 		cfg.PgHost,
@@ -31,7 +31,7 @@ func NewDB(cfg *config.DBCfg) (*DB, error) {
 		return nil, err
 	}
 
-	return &DB{db: new_db}, nil
+	return new_db, nil
 }
 
 func (nd *DB) CloseConnection() error {

@@ -4,6 +4,8 @@ import (
 	"log"
 
 	config "github.com/404th/portfolio_app/Config"
+	"github.com/404th/portfolio_app/internal/adapters/app/api"
+	"github.com/404th/portfolio_app/internal/adapters/core/user"
 	"github.com/404th/portfolio_app/internal/adapters/framework/right/db"
 	_ "github.com/lib/pq"
 )
@@ -25,5 +27,9 @@ func main() {
 		log.Fatalf("Failed to connect database: %v", err)
 		return
 	}
+
+	// adapter
+	user_adapter := user.NewAdapter(pg_db)
+	api.NewAdapter(pg_db, user_adapter)
 
 }
