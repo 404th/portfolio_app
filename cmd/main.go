@@ -5,7 +5,7 @@ import (
 
 	config "github.com/404th/portfolio_app/Config"
 	"github.com/404th/portfolio_app/internal/adapters/app/api"
-	"github.com/404th/portfolio_app/internal/adapters/core/user"
+	"github.com/404th/portfolio_app/internal/adapters/framework/left/grpc"
 	"github.com/404th/portfolio_app/internal/adapters/framework/right/db"
 	_ "github.com/lib/pq"
 )
@@ -29,7 +29,7 @@ func main() {
 	}
 
 	// adapter
-	user_adapter := user.NewAdapter(pg_db)
-	api.NewAdapter(pg_db, user_adapter)
+	user_adapter := api.NewAdapter(pg_db)
+	grpc.NewAdapter(user_adapter)
 
 }

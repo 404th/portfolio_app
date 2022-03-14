@@ -3,19 +3,17 @@ package api
 import (
 	"errors"
 
-	"github.com/404th/portfolio_app/internal/ports"
 	"github.com/404th/portfolio_app/models"
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
 )
 
 type UserAdapter struct {
-	db  *sqlx.DB
-	api ports.APIPorts
+	db *sqlx.DB
 }
 
-func NewAdapter(db *sqlx.DB, api ports.APIPorts) *UserAdapter {
-	return &UserAdapter{db, api}
+func NewAdapter(db *sqlx.DB) *UserAdapter {
+	return &UserAdapter{db}
 }
 
 func (ua *UserAdapter) GetSignUp(email, username string, password int32) (uuid.UUID, error) {

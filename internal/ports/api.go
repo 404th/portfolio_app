@@ -1,7 +1,7 @@
 package ports
 
 import (
-	"github.com/gofrs/uuid"
+	"github.com/google/uuid"
 )
 
 type APIPorts interface {
