@@ -15,11 +15,11 @@ func main() {
 	cfg := &config.DBCfg{
 		PgDriverName: "postgres",
 		PgHost:       "localhost",
-		PgSSLMode:    "verify-full",
+		PgSSLMode:    "disable",
 		PgPort:       "5432",
 		PgDBName:     "registered_users",
 		PgUser:       "postgres",
-		PgPassword:   "password",
+		PgPassword:   "postgres",
 	}
 
 	pg_db, err := db.NewDB(cfg)
@@ -27,9 +27,9 @@ func main() {
 		log.Fatalf("Failed to connect database: %v", err)
 		return
 	}
+	defer pg_db.Close()
 
 	// adapter
 	user_adapter := api.NewAdapter(pg_db)
 	grpc.NewAdapter(user_adapter)
-
 }
