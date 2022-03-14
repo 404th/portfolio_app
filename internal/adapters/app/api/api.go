@@ -1,43 +1,41 @@
 package api
 
 import (
-	"github.com/404th/portfolio_app/internal/adapters/framework/right/db"
 	"github.com/404th/portfolio_app/internal/ports"
-	"github.com/404th/portfolio_app/models"
 	"github.com/gofrs/uuid"
 )
 
 type Adapter struct {
-	db   *db.DB
+	db   ports.DBPort
 	user ports.UserPorts
 }
 
-func NewAdapter(db *db.DB, user ports.UserPorts) *Adapter {
+func NewAdapter(db ports.DBPort, user ports.UserPorts) *Adapter {
 	return &Adapter{db, user}
 }
 
-func (apia *Adapter) GetSignUp(email, username string, password int32) (*models.User, error) {
-	var signed_in_user *models.User
+func (apia *Adapter) GetSignUp(email, username string, password int32) (uuid.UUID, error) {
+	var signed_in_user_id uuid.UUID
 
 	n_u, err := apia.user.SignIn(username, password)
 	if err != nil {
-		return signed_in_user, err
+		return signed_in_user_id, err
 	}
 
-	signed_in_user = n_u
-	return signed_in_user, nil
+	signed_in_user_id = n_u
+	return signed_in_user_id, nil
 }
 
-func (apia *Adapter) GetSignIn(username string, password int32) (*models.User, error) {
-	var new_user *models.User
+func (apia *Adapter) GetSignIn(username string, password int32) (uuid.UUID, error) {
+	var new_user_id uuid.UUID
 
-	n_u, err := apia.user.SignUp(email, username, password)
+	n_u, err := apia.user.SignIn(username, password)
 	if err != nil {
-		return new_user, err
+		return new_user_id, err
 	}
 
-	new_user = n_u
-	return new_user, nil
+	new_user_id = n_u
+	return new_user_id, nil
 }
 
 func (apia *Adapter) GetDeleteUser(id uuid.UUID) (bool, error) {
